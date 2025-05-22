@@ -1,5 +1,6 @@
 import { useFocusEffect } from '@react-navigation/native';
 import { Audio, ResizeMode, Video } from 'expo-av';
+import { Stack } from 'expo-router';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   Alert,
@@ -27,7 +28,7 @@ const NextScreen = () => {
     const loadSound = async () => {
       try {
         await soundObject.current.loadAsync(
-          require('@/assets/sounds/backgorund.mp3'), // <-- Make sure this path and filename is correct!
+          require('@/assets/sounds/background.mp3'), // <-- Make sure this path and filename is correct!
           { shouldPlay: true, isLooping: true }
         );
         setIsSoundLoaded(true);
@@ -109,47 +110,54 @@ useEffect(() => {
   );
 
   return (
-    <SafeAreaView style={styles.container}>
-      {Platform.OS !== 'web' ? (
-        <Video
-          ref={videoRef}
-          source={require('@/assets/videos/myvideo.mp4')}
-          style={styles.video}
-          shouldPlay
-          isLooping
-          resizeMode={ResizeMode.COVER}
+    <>
+      <Stack.Screen
+          options={{
+            headerShown: false,
+          }}
         />
-      ) : (
-        <video
-          src={require('@/assets/videos/myvideo.mp4')}
-          style={styles.video}
-          autoPlay
-          loop
-        />
-      )}
-
-      <View style={styles.overlay}>
-        <Text style={styles.timerText}>
-          Time: {Math.floor(timer / 60)}:{(timer % 60).toString().padStart(2, '0')}
-        </Text>
-        <Text style={styles.levelText}>Level: {level}</Text>
-        <Text style={styles.recordText}>Highest Record: {Math.floor(highestRecord / 60)} min</Text>
-
-        {!running ? (
-          <TouchableOpacity style={styles.button} onPress={() => setRunning(true)}>
-            <Text style={styles.buttonText}>Start Timer</Text>
-          </TouchableOpacity>
+      <SafeAreaView style={styles.container}>
+        {Platform.OS !== 'web' ? (
+          <Video
+            ref={videoRef}
+            source={require('@/assets/videos/myvideo.mp4')}
+            style={styles.video}
+            shouldPlay
+            isLooping
+            resizeMode={ResizeMode.COVER}
+          />
         ) : (
-          <TouchableOpacity style={[styles.button, styles.stopButton]} onPress={() => setRunning(false)}>
-            <Text style={styles.buttonText}>Stop Timer</Text>
-          </TouchableOpacity>
+          <video
+            src={require('@/assets/videos/myvideo.mp4')}
+            style={styles.video}
+            autoPlay
+            loop
+          />
         )}
 
-        <TouchableOpacity style={styles.button} onPress={toggleSound}>
-          <Text style={styles.buttonText}>{isSoundPlaying ? 'Pause Sound' : 'Resume Sound'}</Text>
-        </TouchableOpacity>
-      </View>
-    </SafeAreaView>
+        <View style={styles.overlay}>
+          <Text style={styles.timerText}>
+            Time: {Math.floor(timer / 60)}:{(timer % 60).toString().padStart(2, '0')}
+          </Text>
+          <Text style={styles.levelText}>Level: {level}</Text>
+          <Text style={styles.recordText}>Highest Record: {Math.floor(highestRecord / 60)} min</Text>
+
+          {!running ? (
+            <TouchableOpacity style={styles.button} onPress={() => setRunning(true)}>
+              <Text style={styles.buttonText}>Start Timer</Text>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity style={[styles.button, styles.stopButton]} onPress={() => setRunning(false)}>
+              <Text style={styles.buttonText}>Stop Timer</Text>
+            </TouchableOpacity>
+          )}
+
+          <TouchableOpacity style={styles.button} onPress={toggleSound}>
+            <Text style={styles.buttonText}>{isSoundPlaying ? 'Pause Sound' : 'Resume Sound'}</Text>
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
+    </>
   );
 };
 

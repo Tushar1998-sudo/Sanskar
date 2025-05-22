@@ -172,7 +172,7 @@ const styles = StyleSheet.create({
   fullImage: {
     width: '100%',
     height: 250,
-    resizeMode: 'cover',
+    resizeMode: 'contain',
   },
   flatListContainer: {
     padding: 10,
